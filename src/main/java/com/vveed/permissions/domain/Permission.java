@@ -59,4 +59,8 @@ public class Permission {
 
         return false;
     }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
 }

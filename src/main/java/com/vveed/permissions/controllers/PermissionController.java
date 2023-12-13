@@ -6,6 +6,7 @@ import com.vveed.permissions.services.PermissionService;
 import com.vveed.permissions.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,11 +38,13 @@ public class PermissionController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('admin')")
     public Permission createPermission(@RequestBody Permission permission){
         return permissionService.save(permission);
     }
 
     @PostMapping(value = "/grant/{permissionId}/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('can_create_users') or hasAuthority('can_update_users')")
     public ResponseEntity<?> grantPermissionToUser(@PathVariable("permissionId") Long permissionId, @PathVariable("userId") Long userId){
         Permission permission = permissionService.findById(permissionId).get();
 
@@ -52,6 +55,7 @@ public class PermissionController {
     }
 
     @DeleteMapping(value = "/disable/{permissionId}/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('can_create_users') or hasAuthority('can_update_users') or hasAuthority('can_delete_users')")
     public ResponseEntity<?> disablePermissionToUser(@PathVariable("permissionId") Long permissionId, @PathVariable("userId") Long userId){
         Permission permission = permissionService.findById(permissionId).get();
         User user = userService.findById(userId).get();
@@ -63,11 +67,13 @@ public class PermissionController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('admin')")
     public Permission updatePermission(@RequestBody Permission permission){
         return permissionService.save(permission);
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> deletePermission(@PathVariable("id") Long id){
         this.permissionService.deleteById(id);
         return ResponseEntity.ok().build();
