@@ -9,12 +9,10 @@ import com.vveed.permissions.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -30,6 +28,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+        System.out.println(loginRequest.getEmail());
+        System.out.println(loginRequest.getPassword());
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         }catch (Exception e){
@@ -39,14 +39,18 @@ public class AuthController {
 
         User user = this.userService.findByEmail(loginRequest.getEmail());
 
-        String roles = "[";
+        String roles = "";
 
-        for(Permission permission : user.getPermissions()){
-            roles += permission.getPermission() + ", ";
+        if(user.getPermissions().size() != 0){
+            roles += "[";
+
+            for(Permission permission : user.getPermissions()){
+                roles += permission.getPermission() + ", ";
+            }
+
+            roles = roles.substring(0, roles.lastIndexOf(','));
+            roles += "]";
         }
-
-        roles = roles.substring(0, roles.lastIndexOf(','));
-        roles += "]";
 
         return ResponseEntity.ok(new LoginResponse(jwtUtil.generateToken(loginRequest.getEmail(), roles)));
     }

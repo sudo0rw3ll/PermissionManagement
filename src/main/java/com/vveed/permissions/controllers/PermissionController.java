@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/permissions")
 public class PermissionController {
     private final PermissionService permissionService;
