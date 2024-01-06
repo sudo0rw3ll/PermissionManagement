@@ -26,11 +26,9 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     public List<User> findAll() {
         return (List<User>) userRepository.findAll();
     }
-
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
@@ -42,7 +40,6 @@ public class UserService implements UserDetailsService {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
-
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);

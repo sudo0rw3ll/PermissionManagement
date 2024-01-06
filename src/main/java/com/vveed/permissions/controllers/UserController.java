@@ -46,8 +46,8 @@ public class UserController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('can_create_users')")
     public User createUser(@RequestBody User user) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("User Roles: " + userDetails.getAuthorities());
+//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        System.out.println("User Roles: " + userDetails.getAuthorities());
         return userService.save(user);
     }
 
