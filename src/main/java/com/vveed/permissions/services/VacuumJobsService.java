@@ -45,8 +45,12 @@ public class VacuumJobsService implements IService<VacuumJob, Long>{
     }
 
     @Override
-    public List<VacuumJob> findAll() {
+    public List<VacuumJob> findAll(){
         return this.vacuumJobRepository.findAll();
+    }
+
+    public List<VacuumJob> findAll(Long user_id) {
+        return this.vacuumJobRepository.findAll(user_id);
     }
 
     @Override

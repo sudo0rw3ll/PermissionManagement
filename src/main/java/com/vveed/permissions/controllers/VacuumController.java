@@ -17,10 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.attribute.standard.Media;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -74,11 +71,18 @@ public class VacuumController {
         return this.vacuumService.search(user.getId(), name, statuses, dateFrom, dateTo);
     }
 
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('can_add_vacuum')")
-    public Vacuum createVacuum(@RequestBody Vacuum vacuum){
+    public Vacuum createVacuum(@RequestParam(required = true) String vacuumName){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = this.userService.findByEmail(userDetails.getUsername());
+
+        Vacuum vacuum = new Vacuum();
+        vacuum.setName(vacuumName);
+        vacuum.setAdded_by(user.getId());
+        vacuum.setStatus(VacuumStatus.STOPPED);
+        vacuum.setDateCreated(new Date().getTime());
+        vacuum.setActive(true);
 
         Vacuum newVacuum = this.vacuumService.save(vacuum);
 
