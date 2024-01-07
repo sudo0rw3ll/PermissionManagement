@@ -3,6 +3,7 @@ package com.vveed.permissions.repositories;
 import com.vveed.permissions.domain.Vacuum;
 import com.vveed.permissions.domain.enums.VacuumStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,19 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface VacuumRepository extends JpaRepository<Vacuum, Long> {
+public interface VacuumRepository extends JpaRepository<Vacuum, Long>, JpaSpecificationExecutor<Vacuum> {
 
-    @Query(value = "SELECT * FROM Vacuum AS vac WHERE vac.added_by = :user_id " +
-            "AND (vac.name like %:name% " +
-            "OR vac.status IN :statuses " +
-            "OR (vac.date_created >= :dateFrom OR vac.date_created <= :dateTo))"
-            ,nativeQuery = true)
-    List<Vacuum> search(@Param("user_id") Long user_id,
-                        @Param("name") String name,
-                        @Param("statuses") List<String> statuses,
-                        @Param("dateFrom") Long dateFrom,
-                        @Param("dateTo") Long dateTo
-    );
+//    @Query(value = "SELECT * FROM Vacuum AS vac WHERE vac.added_by = :user_id " +
+//            "AND (vac.name like %:name% " +
+//            "OR vac.status IN (:statuses) " +
+//            "OR ((:dateFrom > 0 AND vac.date_created >= :dateFrom) OR (:dateTo > 0 AND vac.date_created <= :dateTo)))"
+//            ,nativeQuery = true)
+//    List<Vacuum> search(@Param("user_id") Long user_id,
+//                        @Param("name") String name,
+//                        @Param("statuses") List<String> statuses,
+//                        @Param("dateFrom") Long dateFrom,
+//                        @Param("dateTo") Long dateTo
+//    );
 
     @Modifying
     @Transactional

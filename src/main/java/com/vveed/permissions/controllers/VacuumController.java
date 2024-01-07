@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.print.attribute.standard.Media;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -59,8 +60,10 @@ public class VacuumController {
         if (name == null)
             name = "";
 
+//        System.out.println(statuses.toString());
+
         if (statuses == null)
-            statuses = new ArrayList<>();
+            statuses = new ArrayList<String>();
 
         if (dateFrom == null)
             dateFrom = 0L;

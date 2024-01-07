@@ -2,9 +2,11 @@ package com.vveed.permissions.services;
 
 import com.vveed.permissions.domain.Vacuum;
 import com.vveed.permissions.domain.enums.VacuumStatus;
+import com.vveed.permissions.domain.search.VacuumSpecifications;
 import com.vveed.permissions.repositories.VacuumRepository;
 import com.vveed.permissions.services.background.BackgroundTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,7 +46,9 @@ public class VacuumService implements IService<Vacuum, Long>{
     }
 
     public List<Vacuum> search(Long user_id, String name, List<String> statuses, Long dateFrom, Long dateTo){
-        return this.vacuumRepository.search(user_id, name, statuses, dateFrom, dateTo);
+//        return this.vacuumRepository.search(user_id, name, statuses, dateFrom, dateTo);
+        Specification<Vacuum> spec = VacuumSpecifications.searchVacuum(user_id, name, statuses, dateFrom, dateTo);
+        return vacuumRepository.findAll(spec);
     }
 
     public void disableCleaner(Long user_id, Long cleaner_id){
