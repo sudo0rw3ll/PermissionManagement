@@ -30,6 +30,9 @@ public class Vacuum {
 
     private Long added_by;
 
+    @Column(name = "discharge_count")
+    private Integer dischargeCount = 0;
+
     @OneToMany(mappedBy = "vacuum")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<VacuumJob> jobs;
@@ -88,6 +91,14 @@ public class Vacuum {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Integer getDischargeFlag() {
+        return dischargeCount;
+    }
+
+    public void setDischargeFlag(Integer dischargeCount) {
+        this.dischargeCount = dischargeCount;
     }
 
     @Override

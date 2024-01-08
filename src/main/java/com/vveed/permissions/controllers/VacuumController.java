@@ -6,19 +6,13 @@ import com.vveed.permissions.domain.enums.VacuumStatus;
 import com.vveed.permissions.services.PermissionService;
 import com.vveed.permissions.services.UserService;
 import com.vveed.permissions.services.VacuumService;
-import com.vveed.permissions.services.background.BackgroundTaskService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @CrossOrigin
@@ -56,8 +50,6 @@ public class VacuumController {
 
         if (name == null)
             name = "";
-
-//        System.out.println(statuses.toString());
 
         if (statuses == null)
             statuses = new ArrayList<String>();

@@ -29,7 +29,16 @@ public class VacuumSpecifications {
 
             if(!statuses.isEmpty()){
                 for(String status : statuses){
-                    vacuumStatuses.add(VacuumStatus.valueOf(status));
+//                    vacuumStatuses.add(VacuumStatus.valueOf(status));
+                    if(VacuumStatus.RUNNING.toString().equals(status)){
+                        vacuumStatuses.add(VacuumStatus.RUNNING);
+                    }
+                    if(VacuumStatus.STOPPED.toString().equals(status)){
+                        vacuumStatuses.add(VacuumStatus.STOPPED);
+                    }
+                    if(VacuumStatus.DISCHARGING.toString().equals(status)){
+                        vacuumStatuses.add(VacuumStatus.DISCHARGING);
+                    }
                 }
                 orPredicates.add(root.get("status").in(vacuumStatuses));
             }

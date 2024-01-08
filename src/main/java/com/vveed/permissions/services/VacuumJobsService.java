@@ -89,6 +89,8 @@ public class VacuumJobsService implements IService<VacuumJob, Long>{
 
             Vacuum vacuum = this.vacuumRepository.findById(job.getVacuum_id()).get();
 
+            System.out.println(job.getAction() + " " + job.getAction().getClass().getName());
+
             this.taskScheduler.schedule(() -> this.vacuumService.performAction(job.getVacuum_id(), vacuum.getAdded_by(), job.getAction()), new CronTrigger(String.valueOf(job.getTime()) + " * * * * ?"));
             this.scheduledJobs.add(job.getId());
         }

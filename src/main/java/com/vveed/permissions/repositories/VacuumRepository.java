@@ -15,18 +15,6 @@ import java.util.List;
 @Repository
 public interface VacuumRepository extends JpaRepository<Vacuum, Long>, JpaSpecificationExecutor<Vacuum> {
 
-//    @Query(value = "SELECT * FROM Vacuum AS vac WHERE vac.added_by = :user_id " +
-//            "AND (vac.name like %:name% " +
-//            "OR vac.status IN (:statuses) " +
-//            "OR ((:dateFrom > 0 AND vac.date_created >= :dateFrom) OR (:dateTo > 0 AND vac.date_created <= :dateTo)))"
-//            ,nativeQuery = true)
-//    List<Vacuum> search(@Param("user_id") Long user_id,
-//                        @Param("name") String name,
-//                        @Param("statuses") List<String> statuses,
-//                        @Param("dateFrom") Long dateFrom,
-//                        @Param("dateTo") Long dateTo
-//    );
-
     @Modifying
     @Transactional
     @Query(value = "UPDATE Vacuum AS vac SET vac.status = :status WHERE vac.added_by = :user_id AND vac.id = :vac_id")
@@ -36,4 +24,17 @@ public interface VacuumRepository extends JpaRepository<Vacuum, Long>, JpaSpecif
     @Transactional
     @Query(value = "UPDATE Vacuum AS vac SET vac.active = 0 WHERE vac.added_by = :user_id AND vac.id = :vac_id")
     void disable(@Param("user_id") Long user_id, @Param("vac_id") Long vac_id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Vacuum AS vac SET vac.dischargeCount = vac.dischargeCount + 1 WHERE vac.id = :vac_id")
+    void incrementDischargeCount(@Param("vac_id") Long vac_id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Vacuum AS vac SET vac.dischargeCount = 0 WHERE vac.id = :vac_id")
+    void resetDischargeCount(@Param("vac_id") Long vac_id);
+
+    @Query(value = "SELECT * FROM Vacuum as vac where vac.dischargeCount >= 3", nativeQuery = true)
+    List<Vacuum> getCleanersToDischarge();
 }

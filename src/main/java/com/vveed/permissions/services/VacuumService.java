@@ -7,6 +7,7 @@ import com.vveed.permissions.repositories.VacuumRepository;
 import com.vveed.permissions.services.background.BackgroundTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,9 +47,16 @@ public class VacuumService implements IService<Vacuum, Long>{
     }
 
     public List<Vacuum> search(Long user_id, String name, List<String> statuses, Long dateFrom, Long dateTo){
-//        return this.vacuumRepository.search(user_id, name, statuses, dateFrom, dateTo);
         Specification<Vacuum> spec = VacuumSpecifications.searchVacuum(user_id, name, statuses, dateFrom, dateTo);
         return vacuumRepository.findAll(spec);
+    }
+
+    public void incrementDischargeCount(Long vacuum_id){
+        this.vacuumRepository.incrementDischargeCount(vacuum_id);
+    }
+
+    public void resetDischargeCount(Long vacuum_id){
+        this.vacuumRepository.resetDischargeCount(vacuum_id);
     }
 
     public void disableCleaner(Long user_id, Long cleaner_id){
@@ -58,4 +66,13 @@ public class VacuumService implements IService<Vacuum, Long>{
     public void performAction(Long vacuum_id, Long user_id, VacuumStatus vacuumStatus){
         this.backgroundTaskService.doJob(vacuum_id, user_id, vacuumStatus);
     }
+
+//    @Scheduled(fixedDelay = 60000)
+//    public void runAutoDischarge(){
+//        List<Vacuum> discharge = this.vacuumRepository.getCleanersToDischarge();
+//
+//        for(Vacuum vacuum : discharge){
+//            this.performAction(vacuum.getId(), vacuum.getAdded_by(), VacuumStatus.DISCHARGING);
+//        }
+//    }
 }
